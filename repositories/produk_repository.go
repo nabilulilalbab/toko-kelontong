@@ -21,8 +21,10 @@ func GetAllProduk() []models.Produk {
 // start new
 
 type ProdukRepository interface {
+	FindByID(id uint) (models.Produk, error)
 	FindAll() ([]models.Produk, error)
 	Save(produk models.Produk) (models.Produk, error)
+	Update(produk models.Produk) (models.Produk, error)
 }
 
 type produkRepositoryImpl struct {
@@ -47,4 +49,15 @@ func (r *produkRepositoryImpl) Save(produk models.Produk) (models.Produk, error)
 		return models.Produk{}, err
 	}
 	return produk, nil
+}
+
+func (r *produkRepositoryImpl) FindByID(id uint) (models.Produk, error) {
+	var produk models.Produk
+	err := r.db.First(&produk, id).Error
+	return produk, err
+}
+
+func (r *produkRepositoryImpl) Update(produk models.Produk) (models.Produk, error) {
+	err := r.db.Save(&produk).Error
+	return produk, err
 }

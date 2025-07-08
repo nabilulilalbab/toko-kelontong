@@ -17,5 +17,7 @@ func SetupRouter(produkController controllers.ProdukController) *httprouter.Rout
 	router.GET("/produk", produkController.Index)
 	router.GET("/produk/tambah", produkController.Form)
 	router.POST("/produk/tambah", produkController.Store)
+	router.GET("/produk/edit/:id", produkController.Edit)
+	router.POST("/produk/update/:id", produkController.Update)
 	return router
 }

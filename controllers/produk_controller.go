@@ -18,18 +18,20 @@ type ProdukController interface {
 	Index(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Form(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Store(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Edit(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
-type produkcotrollerimpl struct {
+type produkControllerImpl struct {
 	produkService services.ProdukService
 	templates     *template.Template
 }
 
 func NewProdukController(s services.ProdukService, t *template.Template) ProdukController {
-	return &produkcotrollerimpl{produkService: s, templates: t}
+	return &produkControllerImpl{produkService: s, templates: t}
 }
 
-func (c *produkcotrollerimpl) Index(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *produkControllerImpl) Index(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	log.Println("Controller: Memulai proses menampilkan daftar produk.")
 	produks, err := c.produkService.FindAll()
 	if err != nil {
@@ -49,9 +51,10 @@ func (c *produkcotrollerimpl) Index(w http.ResponseWriter, r *http.Request, ps h
 	log.Println("Controller: Berhasil menampilkan daftar produk.")
 }
 
-func (c *produkcotrollerimpl) Form(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *produkControllerImpl) Form(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	data := map[string]any{
-		"Title": "Tambah Produk Baru",
+		"Title":      "Tambah Produk Baru",
+		"FormAction": "/produk/tambah/",
 	}
 	if err := c.templates.ExecuteTemplate(w, "form.html", data); err != nil {
 		log.Printf("Controller: Error saat merender template form: %v\n", err)
@@ -59,7 +62,7 @@ func (c *produkcotrollerimpl) Form(w http.ResponseWriter, r *http.Request, ps ht
 	}
 }
 
-func (c *produkcotrollerimpl) Store(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+func (c *produkControllerImpl) Store(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
 	log.Println("Controller: Memulai proses store produk.")
 	if err := r.ParseForm(); err != nil {
 		http.Error(w, "Gagal mem-parsing form", http.StatusBadRequest)
@@ -80,4 +83,39 @@ func (c *produkcotrollerimpl) Store(w http.ResponseWriter, r *http.Request, ps h
 	}
 	log.Println("Controller: Berhasil store produk, redirecting...")
 	http.Redirect(w, r, "/produk", http.StatusSeeOther)
+}
+
+func (c *produkControllerImpl) Edit(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, _ := strconv.Atoi(ps.ByName("id"))
+	produk, err := c.produkService.GetByID(uint(id))
+	if err != nil {
+		http.Error(w, "Produk tidak ditemukan", http.StatusNotFound)
+		return
+	}
+	data := map[string]any{
+		"Title":      "Edit Produk",
+		"Produk":     produk,
+		"FormAction": "/produk/update/" + strconv.Itoa(id),
+	}
+	c.templates.ExecuteTemplate(w, "form.html", data)
+}
+
+func (c *produkControllerImpl) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	id, _ := strconv.Atoi(ps.ByName("id"))
+	r.ParseForm()
+
+	produk := models.Produk{
+		NamaProduk: r.PostForm.Get("nama_produk"),
+		Harga:      uint(mustAtoi(r.PostForm.Get("harga"))),
+		Stok:       uint(mustAtoi(r.PostForm.Get("stok"))),
+	}
+
+	c.produkService.Update(uint(id), produk)
+	http.Redirect(w, r, "/produk", http.StatusSeeOther)
+}
+
+// Fungsi helper kecil untuk Atoi
+func mustAtoi(s string) int {
+	i, _ := strconv.Atoi(s)
+	return i
 }

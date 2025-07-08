@@ -12,6 +12,8 @@ import (
 type ProdukService interface {
 	FindAll() ([]models.Produk, error)
 	Create(produk models.Produk) (models.Produk, error)
+	GetByID(id uint) (models.Produk, error)
+	Update(id uint, produk models.Produk) (models.Produk, error)
 }
 
 type produkServiceImpl struct {
@@ -41,4 +43,16 @@ func (s *produkServiceImpl) Create(produk models.Produk) (models.Produk, error) 
 		return models.Produk{}, err
 	}
 	return newProduk, nil
+}
+
+func (s *produkServiceImpl) GetByID(id uint) (models.Produk, error) {
+	log.Printf("Service: Mencari produk dengan ID: %d", id)
+	return s.repo.FindByID(id)
+}
+
+func (s *produkServiceImpl) Update(id uint, produk models.Produk) (models.Produk, error) {
+	log.Printf("Service: Memulai proses update produk ID: %d", id)
+	// Set ID dari URL ke struct produk sebelum di-save
+	produk.ID = id
+	return s.repo.Update(produk)
 }
