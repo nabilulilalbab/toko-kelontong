@@ -1,25 +1,45 @@
-{{define "content"}}
-<h1 class="text-3xl font-bold mb-4">Daftar Produk</h1>
-<div class="bg-white shadow-md rounded-lg p-6">
-  <table class="min-w-full">
-    <thead>
-      <tr>
-        <th class="py-2 px-4 border-b">ID</th>
-        <th class="py-2 px-4 border-b">Nama Produk</th>
-        <th class="py-2 px-4 border-b">Harga</th>
-        <th class="py-2 px-4 border-b">Stok</th>
-      </tr>
-    </thead>
-    <tbody>
-      {{range .Products}}
-      <tr>
-        <td class="py-2 px-4 border-b text-center">{{.ID}}</td>
-        <td class="py-2 px-4 border-b">{{.NamaProduk}}</td>
-        <td class="py-2 px-4 border-b text-right">{{.Harga}}</td>
-        <td class="py-2 px-4 border-b text-center">{{.Stok}}</td>
-      </tr>
-      {{end}}
-    </tbody>
-  </table>
-</div>
-{{end}}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{{ .Title }} - Toko Klontong</title>
+  </head>
+  <body class="bg-gray-100">
+    {{template "navbar.html"}}
+    <div class="container mx-auto mt-8">
+      <h1 class="text-3xl font-bold mb-4">Daftar Produk</h1>
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="mb-4">
+          <a
+            href="/produk/tambah"
+            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >Tambah Produk</a
+          >
+        </div>
+        <table class="min-w-full">
+          <thead>
+            <tr>
+              <th class="py-2 px-4 border-b">ID</th>
+              <th class="py-2 px-4 border-b">Nama Produk</th>
+              <th class="py-2 px-4 border-b">Harga</th>
+              <th class="py-2 px-4 border-b">Stok</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{range .Products}}
+            <tr>
+              <td class="py-2 px-4 border-b text-center">{{.ID}}</td>
+              <td class="py-2 px-4 border-b">{{.NamaProduk}}</td>
+              <td class="py-2 px-4 border-b text-right">{{.Harga}}</td>
+              <td class="py-2 px-4 border-b text-center">{{.Stok}}</td>
+            </tr>
+            {{end}}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {{template "footer.html" .}}
+  </body>
+</html>

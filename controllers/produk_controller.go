@@ -4,9 +4,11 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/julienschmidt/httprouter"
 
+	"github.com/nabilulilalbab/toko-klontong/models"
 	"github.com/nabilulilalbab/toko-klontong/services"
 )
 
@@ -14,6 +16,8 @@ import (
 
 type ProdukController interface {
 	Index(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Form(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Store(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type produkcotrollerimpl struct {
@@ -37,10 +41,43 @@ func (c *produkcotrollerimpl) Index(w http.ResponseWriter, r *http.Request, ps h
 		"Title":    "Daftar Produk",
 		"Products": produks,
 	}
-	err = c.templates.ExecuteTemplate(w, "layout.html", data)
+	err = c.templates.ExecuteTemplate(w, "list.html", data)
 	if err != nil {
 		log.Printf("Controller: Error saat merender template: %v\n", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 	}
 	log.Println("Controller: Berhasil menampilkan daftar produk.")
+}
+
+func (c *produkcotrollerimpl) Form(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	data := map[string]any{
+		"Title": "Tambah Produk Baru",
+	}
+	if err := c.templates.ExecuteTemplate(w, "form.html", data); err != nil {
+		log.Printf("Controller: Error saat merender template form: %v\n", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+}
+
+func (c *produkcotrollerimpl) Store(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	log.Println("Controller: Memulai proses store produk.")
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Gagal mem-parsing form", http.StatusBadRequest)
+		return
+	}
+	namaProduk := r.PostForm.Get("nama_produk")
+	harga, _ := strconv.Atoi(r.PostForm.Get("harga"))
+	stok, _ := strconv.Atoi(r.PostForm.Get("stok"))
+	produk := models.Produk{
+		NamaProduk: namaProduk,
+		Harga:      uint(harga),
+		Stok:       uint(stok),
+	}
+	_, err := c.produkService.Create(produk)
+	if err != nil {
+		http.Error(w, "Gagal menyimpan produk", http.StatusInternalServerError)
+		return
+	}
+	log.Println("Controller: Berhasil store produk, redirecting...")
+	http.Redirect(w, r, "/produk", http.StatusSeeOther)
 }

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>{{ .Title }} - Toko Klontong</title>
+  </head>
+  <body class="bg-gray-100">
+    {{template "navbar.html"}}
+    <div class="container mx-auto mt-8">
+      <h1 class="text-3xl font-bold mb-4">{{.Title}}</h1>
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <form action="/produk/tambah" method="post">
+          <div class="mb-4">
+            <label for="nama_produk" class="block text-gray-700"
+              >Nama Produk</label
+            >
+            <input
+              type="text"
+              name="nama_produk"
+              id="nama_produk"
+              class="w-full px-3 py-2 border rounded"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="harga" class="block text-gray-700">Harga</label>
+            <input
+              type="number"
+              name="harga"
+              id="harga"
+              class="w-full px-3 py-2 border rounded"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="stok" class="block text-gray-700">Stok</label>
+            <input
+              type="number"
+              name="stok"
+              id="stok"
+              class="w-full px-3 py-2 border rounded"
+              required
+            />
+          </div>
+          <div>
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              Simpan
+            </button>
+            <a href="/produk" class="text-gray-600 ml-4">Batal</a>
+          </div>
+        </form>
+      </div>
+    </div>
+    {{template "footer.html" .}}
+  </body>
+</html>

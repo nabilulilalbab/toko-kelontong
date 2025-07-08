@@ -14,3 +14,8 @@ func (m *ProdukServiceMock) FindAll() ([]models.Produk, error) {
 	args := m.Called()
 	return args.Get(0).([]models.Produk), args.Error(1)
 }
+
+func (m *ProdukServiceMock) Create(produk models.Produk) (models.Produk, error) {
+	args := m.Called(produk)
+	return args.Get(0).(models.Produk), args.Error(1)
+}

@@ -15,5 +15,7 @@ func SetupRouter(produkController controllers.ProdukController) *httprouter.Rout
 		fmt.Fprint(w, "Selamat Datang di Toko Klontong!")
 	})
 	router.GET("/produk", produkController.Index)
+	router.GET("/produk/tambah", produkController.Form)
+	router.POST("/produk/tambah", produkController.Store)
 	return router
 }

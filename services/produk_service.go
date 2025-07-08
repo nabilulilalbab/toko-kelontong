@@ -11,6 +11,7 @@ import (
 
 type ProdukService interface {
 	FindAll() ([]models.Produk, error)
+	Create(produk models.Produk) (models.Produk, error)
 }
 
 type produkServiceImpl struct {
@@ -30,4 +31,14 @@ func (s *produkServiceImpl) FindAll() ([]models.Produk, error) {
 
 func NewProdukService(repo repositories.ProdukRepository) ProdukService {
 	return &produkServiceImpl{repo: repo}
+}
+
+func (s *produkServiceImpl) Create(produk models.Produk) (models.Produk, error) {
+	log.Println("Service: Memulai proses create produk.")
+	newProduk, err := s.repo.Save(produk)
+	if err != nil {
+		log.Printf("Service: Error saat menyimpan produk baru: %v\n", err)
+		return models.Produk{}, err
+	}
+	return newProduk, nil
 }
