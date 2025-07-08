@@ -19,3 +19,13 @@ func (m *ProdukRepositoryMock) FindAll() ([]models.Produk, error) {
 	args := m.Called()
 	return args.Get(0).([]models.Produk), args.Error(1)
 }
+
+func (m *ProdukRepositoryMock) FindByID(id uint) (models.Produk, error) {
+	args := m.Called(id)
+	return args.Get(0).(models.Produk), args.Error(1)
+}
+
+func (m *ProdukRepositoryMock) Update(produk models.Produk) (models.Produk, error) {
+	args := m.Called(produk)
+	return args.Get(0).(models.Produk), args.Error(1)
+}

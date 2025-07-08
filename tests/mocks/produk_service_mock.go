@@ -19,3 +19,13 @@ func (m *ProdukServiceMock) Create(produk models.Produk) (models.Produk, error) 
 	args := m.Called(produk)
 	return args.Get(0).(models.Produk), args.Error(1)
 }
+
+func (m *ProdukServiceMock) Update(id uint, produk models.Produk) (models.Produk, error) {
+	args := m.Called(id, produk)
+	return args.Get(0).(models.Produk), args.Error(1)
+}
+
+func (m *ProdukServiceMock) GetByID(id uint) (models.Produk, error) {
+	args := m.Called(id)
+	return args.Get(0).(models.Produk), args.Error(1)
+}

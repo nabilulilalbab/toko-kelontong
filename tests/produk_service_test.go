@@ -43,3 +43,14 @@ func TestProdukService_Create_Success(t *testing.T) {
 	assert.Equal(t, "Kopi Kapal Api", createdProduk.NamaProduk)
 	mockRepo.AssertExpectations(t)
 }
+
+func TestProdukService_GetByID_Success(t *testing.T) {
+	mockRepo := new(mocks.ProdukRepositoryMock)
+	expectedProduk := models.Produk{ID: 1, NamaProduk: "Produk Test"}
+	mockRepo.On("FindByID", uint(1)).Return(expectedProduk, nil)
+	produkService := services.NewProdukService(mockRepo)
+
+	actualProduk, err := produkService.GetByID(1)
+	assert.Nil(t, err)
+	assert.Equal(t, expectedProduk.ID, actualProduk.ID)
+}
