@@ -1,29 +1,25 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Daftar Produk</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-gray-100 p-6">
-    <h1 class="text-2xl font-bold mb-4">Daftar Produk</h1>
-    <table class="table-auto w-full bg-white shadow-md rounded-lg">
-      <thead>
-        <tr class="bg-gray-200">
-          <th class="px-4 py-2 text-left">Nama</th>
-          <th class="px-4 py-2">Harga</th>
-          <th class="px-4 py-2">Stok</th>
-        </tr>
-      </thead>
-      <tbody>
-        {{range .}}
-        <tr class="border-b">
-          <td class="px-4 py-2">{{.NamaProduk}}</td>
-          <td class="px-4 py-2">Rp {{.Harga}}</td>
-          <td class="px-4 py-2">{{.Stok}}</td>
-        </tr>
-        {{end}}
-      </tbody>
-    </table>
-  </body>
-</html>
+{{define "content"}}
+<h1 class="text-3xl font-bold mb-4">Daftar Produk</h1>
+<div class="bg-white shadow-md rounded-lg p-6">
+  <table class="min-w-full">
+    <thead>
+      <tr>
+        <th class="py-2 px-4 border-b">ID</th>
+        <th class="py-2 px-4 border-b">Nama Produk</th>
+        <th class="py-2 px-4 border-b">Harga</th>
+        <th class="py-2 px-4 border-b">Stok</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Products}}
+      <tr>
+        <td class="py-2 px-4 border-b text-center">{{.ID}}</td>
+        <td class="py-2 px-4 border-b">{{.NamaProduk}}</td>
+        <td class="py-2 px-4 border-b text-right">{{.Harga}}</td>
+        <td class="py-2 px-4 border-b text-center">{{.Stok}}</td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
+{{end}}

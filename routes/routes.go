@@ -1,16 +1,19 @@
 package routes
 
 import (
+	"fmt"
+	"net/http"
+
 	"github.com/julienschmidt/httprouter"
 
 	"github.com/nabilulilalbab/toko-klontong/controllers"
 )
 
-func SetupRoutes(router *httprouter.Router) {
-	router.GET("/produk", controllers.ProdukIndex)
-	// router.GET("/produk/create", controllers.ProdukCreateForm)
-	// router.POST("/product", controllers.ProdukStore)
-	// router.GET("/produk/edit/:id", controllers.ProdukEditForm)
-	// router.POST("/produk/update/:id", controllers.ProdukUpdate)
-	// router.POST("/produk/delete/:id", controllers.ProdukDelete)
+func SetupRouter(produkController controllers.ProdukController) *httprouter.Router {
+	router := httprouter.New()
+	router.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+		fmt.Fprint(w, "Selamat Datang di Toko Klontong!")
+	})
+	router.GET("/produk", produkController.Index)
+	return router
 }

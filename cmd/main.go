@@ -2,42 +2,32 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
-	"github.com/julienschmidt/httprouter"
-
 	"github.com/nabilulilalbab/toko-klontong/config"
-	"github.com/nabilulilalbab/toko-klontong/models"
+	"github.com/nabilulilalbab/toko-klontong/controllers"
 	"github.com/nabilulilalbab/toko-klontong/repositories"
 	"github.com/nabilulilalbab/toko-klontong/routes"
+	"github.com/nabilulilalbab/toko-klontong/services"
+	"github.com/nabilulilalbab/toko-klontong/utils"
 )
 
 func main() {
-	// database
 	config.ConnectDatabase()
-	fmt.Println("koneksi database Berhasil")
-	// instance repository
+	// Inisialisasi semua lapisan (Dependency Injection)
+	templateCache := utils.ParseTemplates()
 	produkRepo := repositories.NewProdukRepository(config.DB)
-	seedProducts(produkRepo)
-	// router
-	router := httprouter.New()
-	routes.SetupRoutes(router)
-	fmt.Println("Server berjalan di http://localhost:8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
-		log.Fatal(err)
+	produkService := services.NewProdukService(produkRepo)
+	produkController := controllers.NewProdukController(produkService, templateCache)
+	router := routes.SetupRouter(produkController)
+	server := &http.Server{
+		Addr:    "localhost:8080",
+		Handler: router,
 	}
-}
-
-// Fungsi untuk seeding data produk
-func seedProducts(repo repositories.ProdukRepository) {
-	// Cek apakah produk sudah ada, jika belum, tambahkan.
-	produks, _ := repo.FindAll()
-	if len(produks) == 0 {
-		fmt.Println("Melakukan seeding data produk...")
-		repo.Save(models.Produk{NamaProduk: "Indomie Goreng", Harga: 3000, Stok: 100})
-		repo.Save(models.Produk{NamaProduk: "Teh Botol Sosro", Harga: 5000, Stok: 50})
-		repo.Save(models.Produk{NamaProduk: "Silverqueen 65g", Harga: 12500, Stok: 30})
-		fmt.Println("Seeding selesai.")
+	fmt.Println("Server berjalan di http://localhost:8080")
+	fmt.Println("Akses daftar produk di http://localhost:8080/produk")
+	err := server.ListenAndServe()
+	if err != nil {
+		panic(err)
 	}
 }
