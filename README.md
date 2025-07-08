@@ -130,5 +130,3 @@ Lapisan ini menjembatani antara permintaan HTTP dari pengguna dan logika bisnis.
   - Fungsi bantuan yang sangat penting untuk performa.
   - `template.ParseGlob(...)`: Membaca semua file `.html` dari direktori `templates/produk` dan `templates/partials` sekali saja saat aplikasi pertama kali berjalan.
   - Hasilnya disimpan dalam satu objek `*template.Template` dan digunakan kembali setiap kali ada permintaan untuk merender halaman, menghindari pembacaan file dari disk berulang kali.
-
----
