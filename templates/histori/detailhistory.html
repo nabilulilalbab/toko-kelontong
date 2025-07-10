@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Kasir - Toko Klontong</title>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    {{template "navbar.html"}}
+
+    <div class="container mx-auto mt-8">
+      <h1 class="text-3xl font-bold mb-4">
+        Detail Transaksi #{{.Transaction.ID}}
+      </h1>
+      <div class="bg-white shadow-md rounded-lg p-6">
+        {{$formatWaktu := "02 Jan 2006 15:04:05"}}
+        <p class="mb-2">
+          <strong>Waktu:</strong> {{.Transaction.CreatedAt.Format $formatWaktu}}
+        </p>
+        <p class="mb-4">
+          <strong>Total:</strong>
+          <span class="font-bold text-lg">Rp {{.Transaction.TotalHarga}}</span>
+        </p>
+        <h3 class="text-xl font-semibold mt-6 mb-2 border-t pt-4">
+          Item yang Dibeli:
+        </h3>
+        <ul>
+          {{range .Transaction.DetailTransaksis}}
+          <li class="flex justify-between border-b py-2">
+            <span
+              >{{.Produk.NamaProduk}} ({{.Jumlah}} x Rp {{.Produk.Harga}})</span
+            >
+            <span>Rp {{.Subtotal}}</span>
+          </li>
+          {{end}}
+        </ul>
+        <a
+          href="/histori"
+          class="text-blue-500 hover:underline mt-6 inline-block"
+          >&larr; Kembali ke Riwayat</a
+        >
+      </div>
+    </div>
+    {{template "footer.html" .}}
+  </body>
+</html>

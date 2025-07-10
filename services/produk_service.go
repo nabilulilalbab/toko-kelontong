@@ -15,6 +15,7 @@ type ProdukService interface {
 	GetByID(id uint) (models.Produk, error)
 	Update(id uint, produk models.Produk) (models.Produk, error)
 	Delete(id uint) error
+	Search(query string) ([]models.Produk, error)
 }
 
 type produkServiceImpl struct {
@@ -61,4 +62,9 @@ func (s *produkServiceImpl) Update(id uint, produk models.Produk) (models.Produk
 func (s *produkServiceImpl) Delete(id uint) error {
 	log.Printf("Service: Memulai proses delete produk ID: %d", id)
 	return s.repo.Delete(id)
+}
+
+func (s *produkServiceImpl) Search(query string) ([]models.Produk, error) {
+	log.Printf("Service: Mencari produk dengan query: %s", query)
+	return s.repo.SearchByName(query)
 }

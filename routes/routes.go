@@ -9,7 +9,7 @@ import (
 	"github.com/nabilulilalbab/toko-klontong/controllers"
 )
 
-func SetupRouter(produkController controllers.ProdukController) *httprouter.Router {
+func SetupRouter(produkController controllers.ProdukController, transaksiController controllers.TransaksiController) *httprouter.Router {
 	router := httprouter.New()
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		fmt.Fprint(w, "Selamat Datang di Toko Klontong!")
@@ -20,6 +20,11 @@ func SetupRouter(produkController controllers.ProdukController) *httprouter.Rout
 	router.GET("/produk/edit/:id", produkController.Edit)
 	router.POST("/produk/update/:id", produkController.Update)
 	router.POST("/produk/delete/:id", produkController.Delete)
-	router.GET("/produk/export/excel", produkController.ExportExcel)
+	router.GET("/produk/export", produkController.Export)
+	router.GET("/kasir", transaksiController.ShowKasirPage)
+	router.POST("/kasir/checkout", transaksiController.ProcessCheckout)
+	router.GET("/histori", transaksiController.ShowHistoryPage)
+	router.GET("/histori/:id", transaksiController.ShowHistoryDetailPage)
+	router.GET("/api/produk/search", produkController.SearchAPI)
 	return router
 }

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
@@ -23,7 +25,8 @@ type ProdukController interface {
 	Edit(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	Delete(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
-	ExportExcel(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	Export(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	SearchAPI(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type produkControllerImpl struct {
@@ -135,31 +138,53 @@ func (c *produkControllerImpl) Delete(w http.ResponseWriter, r *http.Request, ps
 	http.Redirect(w, r, "/produk", http.StatusSeeOther)
 }
 
-func (c *produkControllerImpl) ExportExcel(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	log.Println("Controller: Memulai proses ekspor ke Excel.")
+func (c *produkControllerImpl) Export(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	format := r.URL.Query().Get("format")
+	log.Printf("Controller: Memulai proses ekspor ke format: %s.", format)
 
-	// 1. Ambil semua data produk
 	produks, err := c.produkService.FindAll()
 	if err != nil {
 		http.Error(w, "Gagal mengambil data produk", http.StatusInternalServerError)
 		return
 	}
 
-	// 2. Panggil generator Excel dari utils
-	buffer, err := utils.GenerateProdukExcel(produks)
-	if err != nil {
-		http.Error(w, "Gagal membuat file Excel", http.StatusInternalServerError)
+	var buffer *bytes.Buffer
+	var filename string
+	var contentType string
+
+	if format == "pdf" {
+		buffer, err = utils.GenerateProdukPDF(produks)
+		filename = "laporan_produk.pdf"
+		contentType = "application/pdf"
+	} else if format == "excel" {
+		buffer, err = utils.GenerateProdukExcel(produks)
+		filename = "laporan_produk.xlsx"
+		contentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+	} else {
+		http.Error(w, "Format tidak didukung", http.StatusBadRequest)
 		return
 	}
 
-	// 3. Set HTTP Header untuk memberitahu browser agar men-download file
-	w.Header().Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	w.Header().Set("Content-Disposition", "attachment; filename=laporan_produk.xlsx")
-	w.Header().Set("Content-Length", fmt.Sprintf("%d", buffer.Len()))
-
-	// 4. Tulis buffer (isi file) ke response
-	_, err = w.Write(buffer.Bytes())
 	if err != nil {
-		http.Error(w, "Gagal mengirim file", http.StatusInternalServerError)
+		http.Error(w, "Gagal membuat file", http.StatusInternalServerError)
+		return
 	}
+
+	w.Header().Set("Content-Type", contentType)
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", buffer.Len()))
+	w.Write(buffer.Bytes())
+}
+
+func (c *produkControllerImpl) SearchAPI(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	query := r.URL.Query().Get("q") // Ambil query dari ?q=...
+	produks, err := c.produkService.Search(query)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Set header dan kirim response sebagai JSON
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(produks)
 }

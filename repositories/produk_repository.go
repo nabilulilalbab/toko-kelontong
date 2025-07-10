@@ -26,6 +26,7 @@ type ProdukRepository interface {
 	Save(produk models.Produk) (models.Produk, error)
 	Update(produk models.Produk) (models.Produk, error)
 	Delete(id uint) error
+	SearchByName(name string) ([]models.Produk, error)
 }
 
 type produkRepositoryImpl struct {
@@ -65,4 +66,11 @@ func (r *produkRepositoryImpl) Update(produk models.Produk) (models.Produk, erro
 
 func (r *produkRepositoryImpl) Delete(id uint) error {
 	return r.db.Delete(&models.Produk{}, id).Error
+}
+
+func (r *produkRepositoryImpl) SearchByName(name string) ([]models.Produk, error) {
+	var produks []models.Produk
+	// Menggunakan kueri LIKE dengan wildcard '%' untuk mencari bagian dari nama
+	err := r.db.Where("nama_produk LIKE ?", "%"+name+"%").Find(&produks).Error
+	return produks, err
 }

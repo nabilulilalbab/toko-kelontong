@@ -14,7 +14,7 @@ func ConnectDatabase() {
 	if err != nil {
 		panic("Gagal terhubung ke database!")
 	}
-	err = db.AutoMigrate(&models.Produk{})
+	err = db.AutoMigrate(&models.Produk{}, &models.Transaksi{}, &models.DetailTransaksi{})
 	if err != nil {
 		panic("Gagal melakukan migrasi database!")
 	}

@@ -19,7 +19,11 @@ func main() {
 	produkRepo := repositories.NewProdukRepository(config.DB)
 	produkService := services.NewProdukService(produkRepo)
 	produkController := controllers.NewProdukController(produkService, templateCache)
-	router := routes.SetupRouter(produkController)
+	// Inisialisasi dependensi untuk Transaksi
+	transaksiRepo := repositories.NewTransaksiRepository(config.DB)
+	transaksiService := services.NewTransaksiService(transaksiRepo, produkRepo)
+	transaksiController := controllers.NewTransaksiController(transaksiService, produkService, templateCache)
+	router := routes.SetupRouter(produkController, transaksiController)
 	server := &http.Server{
 		Addr:    "localhost:8080",
 		Handler: router,
