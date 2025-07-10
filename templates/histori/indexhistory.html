@@ -4,32 +4,37 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Kasir - Toko Klontong</title>
+    <title>Riwayat Transaksi - Toko Klontong</title>
   </head>
-  <body class="bg-gray-100 font-sans">
+  <body class="bg-[#F8F8F8] font-sans">
     {{template "navbar.html"}}
     <div class="container mx-auto mt-8">
-      <h1 class="text-3xl font-bold mb-4">Riwayat Transaksi</h1>
-      <div class="bg-white shadow-md rounded-lg p-6">
+      <h1 class="text-3xl font-bold mb-4 text-[#333333]">Riwayat Transaksi</h1>
+      <div class="mb-4">
+        <a href="/reports/histori" class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300">
+          Export PDF
+        </a>
+      </div>
+      <div class="bg-[#F8F8F8] shadow-lg rounded-xl p-6">
         <table class="min-w-full">
           <thead>
             <tr>
-              <th class="py-2 px-4 border-b">ID Transaksi</th>
-              <th class="py-2 px-4 border-b">Waktu</th>
-              <th class="py-2 px-4 border-b">Total Harga</th>
-              <th class="py-2 px-4 border-b">Aksi</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tl-lg">ID Transaksi</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Waktu</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Total Harga</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tr-lg">Aksi</th>
             </tr>
           </thead>
           <tbody>
             {{range .Transactions}}
             <tr>
-              <td class="py-2 px-4 border-b text-center">{{.ID}}</td>
-              <td class="py-2 px-4 border-b">
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">{{.ID}}</td>
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">
                 {{.CreatedAt.Format "02 Jan 2006 15:04"}}
               </td>
-              <td class="py-2 px-4 border-b text-right">Rp {{.TotalHarga}}</td>
-              <td class="py-2 px-4 border-b text-center">
-                <a href="/histori/{{.ID}}" class="text-blue-500 hover:underline"
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]">Rp {{.TotalHarga}}</td>
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
+                <a href="/histori/{{.ID}}" class="text-[#4A90E2] hover:text-[#3A7AD0] transition duration-300"
                   >Detail</a
                 >
               </td>

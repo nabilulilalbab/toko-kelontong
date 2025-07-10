@@ -23,7 +23,7 @@ func TestProdukController_Index_Success(t *testing.T) {
 	}
 	mockService.On("FindAll").Return(expectedProduks, nil)
 
-	templates := utils.ParseTemplates()
+	templates := utils.ParseTemplates("../")
 	produkcontroller := controllers.NewProdukController(mockService, templates)
 
 	request := httptest.NewRequest("GET", "/produk", nil)

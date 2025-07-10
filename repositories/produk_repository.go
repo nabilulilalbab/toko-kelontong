@@ -1,22 +1,10 @@
 package repositories
 
 import (
-	"log"
-
 	"gorm.io/gorm"
 
-	"github.com/nabilulilalbab/toko-klontong/config"
 	"github.com/nabilulilalbab/toko-klontong/models"
 )
-
-func GetAllProduk() []models.Produk {
-	var produk []models.Produk
-	err := config.DB.Find(&produk)
-	if err != nil {
-		log.Println("REPOSITORI: gagal get all produk")
-	}
-	return produk
-}
 
 // start new
 

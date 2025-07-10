@@ -15,7 +15,7 @@ import (
 func main() {
 	config.ConnectDatabase()
 	// Inisialisasi semua lapisan (Dependency Injection)
-	templateCache := utils.ParseTemplates()
+	templateCache := utils.ParseTemplates("./")
 	produkRepo := repositories.NewProdukRepository(config.DB)
 	produkService := services.NewProdukService(produkRepo)
 	produkController := controllers.NewProdukController(produkService, templateCache)

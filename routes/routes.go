@@ -24,6 +24,7 @@ func SetupRouter(produkController controllers.ProdukController, transaksiControl
 	router.GET("/kasir", transaksiController.ShowKasirPage)
 	router.POST("/kasir/checkout", transaksiController.ProcessCheckout)
 	router.GET("/histori", transaksiController.ShowHistoryPage)
+	router.GET("/reports/histori", transaksiController.ExportPDF)
 	router.GET("/histori/:id", transaksiController.ShowHistoryDetailPage)
 	router.GET("/api/produk/search", produkController.SearchAPI)
 	router.POST("/api/generate-qris", transaksiController.GenerateQRIS)

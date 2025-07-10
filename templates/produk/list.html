@@ -6,57 +6,50 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title>{{ .Title }} - Toko Klontong</title>
   </head>
-  <body class="bg-gray-100">
+  <body class="bg-[#F8F8F8]">
     {{template "navbar.html"}}
     <div class="container mx-auto mt-8">
-      <h1 class="text-3xl font-bold mb-4">Daftar Produk</h1>
-      <div class="bg-white shadow-md rounded-lg p-6">
-        <div class="mb-4">
+      <h1 class="text-3xl font-bold mb-4 text-[#333333]">Daftar Produk</h1>
+      <div class="bg-[#F8F8F8] shadow-lg rounded-xl p-6">
+        <div class="mb-4 flex space-x-2">
           <a
             href="/produk/tambah"
-            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300"
             >Tambah Produk</a
           >
           <a
             href="/produk/export?format=excel"
-            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300"
             >Ekspor ke Excel</a
           >
           <a
             href="/produk/export?format=pdf"
-            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 ml-2"
+            class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300"
             >Ekspor ke PDF</a
           >
         </div>
         <table class="min-w-full">
           <thead>
             <tr>
-              <th class="py-2 px-4 border-b">ID</th>
-              <th class="py-2 px-4 border-b">Nama Produk</th>
-              <th class="py-2 px-4 border-b">Harga</th>
-              <th class="py-2 px-4 border-b">Stok</th>
-              <th class="py-2 px-4 border-b">Aksi</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tl-lg">ID</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Nama Produk</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Harga</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Stok</th>
+              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tr-lg">Aksi</th>
             </tr>
           </thead>
 
           <tbody>
             {{range .Products}}
             <tr>
-              <td class="py-2 px-4 border-b text-center">{{.ID}}</td>
-              <td class="py-2 px-4 border-b">{{.NamaProduk}}</td>
-              <td class="py-2 px-4 border-b text-right">{{.Harga}}</td>
-              <td class="py-2 px-4 border-b text-center">{{.Stok}}</td>
-              <td class="py-2 px-4 border-b text-center">
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">{{.ID}}</td>
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">{{.NamaProduk}}</td>
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]">{{.Harga}}</td>
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">{{.Stok}}</td>
+              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
                 <a
                   href="/produk/edit/{{.ID}}"
-                  class="text-blue-500 hover:underline"
-                  >Edit</a
-                >
-              </td>
-              <td class="py-2 px-4 border-b text-center">
-                <a
-                  href="/produk/edit/{{.ID}}"
-                  class="text-blue-500 hover:underline mr-2"
+                  class="text-[#4A90E2] hover:text-[#3A7AD0] mr-2 transition duration-300"
                   >Edit</a
                 >
 
@@ -66,7 +59,7 @@
                   class="inline"
                   onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');"
                 >
-                  <button type="submit" class="text-red-500 hover:underline">
+                  <button type="submit" class="text-[#4A90E2] hover:text-[#3A7AD0] transition duration-300">
                     Hapus
                   </button>
                 </form>

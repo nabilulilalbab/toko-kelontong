@@ -29,3 +29,13 @@ func (m *ProdukServiceMock) GetByID(id uint) (models.Produk, error) {
 	args := m.Called(id)
 	return args.Get(0).(models.Produk), args.Error(1)
 }
+
+func (m *ProdukServiceMock) Delete(id uint) error {
+	args := m.Called(id)
+	return args.Error(0)
+}
+
+func (m *ProdukServiceMock) Search(query string) ([]models.Produk, error) {
+	args := m.Called(query)
+	return args.Get(0).([]models.Produk), args.Error(1)
+}

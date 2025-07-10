@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -21,6 +22,7 @@ type TransaksiController interface {
 	GenerateQRIS(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	ShowPaymentPage(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 	ConfirmPayment(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
+	ExportPDF(w http.ResponseWriter, r *http.Request, ps httprouter.Params)
 }
 
 type transaksiControllerImpl struct {
@@ -176,4 +178,23 @@ func (c *transaksiControllerImpl) ConfirmPayment(w http.ResponseWriter, r *http.
 	id, _ := strconv.Atoi(ps.ByName("id"))
 	c.transaksiService.UpdateStatus(uint(id), "lunas")
 	http.Redirect(w, r, "/histori/"+strconv.Itoa(id), http.StatusSeeOther)
+}
+
+func (c *transaksiControllerImpl) ExportPDF(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	transaksis, err := c.transaksiService.GetAll()
+	if err != nil {
+		http.Error(w, "Gagal mengambil data transaksi", http.StatusInternalServerError)
+		return
+	}
+
+	buffer, err := utils.GenerateTransaksiPDF(transaksis)
+	if err != nil {
+		http.Error(w, "Gagal membuat file PDF", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/pdf")
+	w.Header().Set("Content-Disposition", "attachment; filename=\"laporan_transaksi.pdf\"")
+	w.Header().Set("Content-Length", fmt.Sprintf("%d", buffer.Len()))
+	w.Write(buffer.Bytes())
 }

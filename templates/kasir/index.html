@@ -4,40 +4,76 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kasir - Toko Klontong</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
+      rel="stylesheet"
+      type="text/css"
+    />
   </head>
-  <body class="bg-gray-100 font-sans">
+  <body class="bg-[#F8F8F8] font-sans">
     {{template "navbar.html"}}
     <div class="container mx-auto mt-8 grid grid-cols-3 gap-8">
       <!-- Kolom Daftar Produk -->
-      <div class="col-span-2 bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4">Daftar Produk</h2>
+      <div class="col-span-2 bg-[#F8F8F8] p-6 rounded-xl shadow-lg">
+        <h2 class="text-2xl font-bold mb-4 text-[#333333]">Daftar Produk</h2>
         <input
           type="text"
           id="search-box"
           placeholder="Cari nama produk..."
-          class="w-full px-3 py-2 border rounded mb-4"
+          class="w-full px-3 py-2 border border-[#E0E0E0] rounded-lg mb-4 focus:outline-none focus:border-[#4A90E2]"
         />
         <div class="max-h-[65vh] overflow-y-auto">
           <table class="min-w-full">
-            <thead class="bg-gray-200 sticky top-0">
+            <thead class="bg-[#E0E0E0] sticky top-0">
               <tr>
-                <th class="py-2 px-4 border-b">Nama Produk</th>
-                <th class="py-2 px-4 border-b">Harga</th>
-                <th class="py-2 px-4 border-b">Stok</th>
-                <th class="py-2 px-4 border-b">Aksi</th>
+                <th
+                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tl-lg"
+                >
+                  Nama Produk
+                </th>
+                <th
+                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm"
+                >
+                  Harga
+                </th>
+                <th
+                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm"
+                >
+                  Stok
+                </th>
+                <th
+                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tr-lg"
+                >
+                  Aksi
+                </th>
               </tr>
             </thead>
             <tbody id="product-table-body">
               {{range .Products}}
               <tr>
-                <td class="py-2 px-4 border-b">{{.NamaProduk}}</td>
-                <td class="py-2 px-4 border-b text-right">{{.Harga}}</td>
-                <td class="py-2 px-4 border-b text-center">{{.Stok}}</td>
-                <td class="py-2 px-4 border-b text-center">
+                <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">
+                  {{.NamaProduk}}
+                </td>
+                <td
+                  class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]"
+                >
+                  {{.Harga}}
+                </td>
+                <td
+                  class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]"
+                >
+                  {{.Stok}}
+                </td>
+                <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
                   <button
-                    onclick="addToCart({ id: {{.ID}}, name: '{{.NamaProduk}}', price: {{.Harga}} })"
-                    class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+                    onclick='addToCart({ id: {{.ID}}, name: "{{.NamaProduk}}", price: {{.Harga}} })'
+                    class="bg-[#4A90E2] text-white px-3 py-1 rounded-lg hover:bg-[#3A7AD0] transition duration-300 text-sm"
                   >
                     Tambah
                   </button>
@@ -50,16 +86,16 @@
       </div>
 
       <!-- Kolom Keranjang & Pembayaran -->
-      <div class="col-span-1 bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4">Keranjang</h2>
+      <div class="col-span-1 bg-[#F8F8F8] p-6 rounded-xl shadow-lg">
+        <h2 class="text-2xl font-bold mb-4 text-[#333333]">Keranjang</h2>
         <div id="cart-items" class="mb-4 min-h-[45vh]">
-          <p class="text-gray-500">Keranjang kosong.</p>
+          <p class="text-[#333333]">Keranjang kosong.</p>
         </div>
-        <div class="border-t pt-4">
+        <div class="border-t border-[#E0E0E0] pt-4">
           <div class="mb-4">
-            <h3 class="font-bold mb-2">Metode Bayar:</h3>
+            <h3 class="font-bold mb-2 text-[#333333]">Metode Bayar:</h3>
             <div class="flex items-center space-x-4">
-              <label
+              <label class="text-[#333333]"
                 ><input
                   type="radio"
                   name="payment_method"
@@ -68,19 +104,21 @@
                 />
                 Tunai</label
               >
-              <label
+              <label class="text-[#333333]"
                 ><input type="radio" name="payment_method" value="qris" />
                 QRIS</label
               >
             </div>
           </div>
-          <div class="flex justify-between items-center text-xl font-bold">
+          <div
+            class="flex justify-between items-center text-xl font-bold text-[#333333]"
+          >
             <span>Total:</span>
             <span id="cart-total">Rp 0</span>
           </div>
           <button
             id="checkout-btn"
-            class="w-full bg-green-500 text-white mt-4 py-3 rounded hover:bg-green-600 disabled:bg-gray-400"
+            class="w-full bg-[#4A90E2] text-white mt-4 py-3 rounded-lg hover:bg-[#3A7AD0] transition duration-300 disabled:bg-gray-300 disabled:text-gray-500"
             disabled
           >
             Proses Pembayaran
@@ -102,11 +140,11 @@
         products.forEach((p) => {
           productTableBody.innerHTML += `
             <tr>
-                <td class="py-2 px-4 border-b">${p.NamaProduk}</td>
-                <td class="py-2 px-4 border-b text-right">${p.Harga}</td>
-                <td class="py-2 px-4 border-b text-center">${p.Stok}</td>
-                <td class="py-2 px-4 border-b text-center">
-                    <button onclick='addToCart({ id: ${p.ID}, name: "${p.NamaProduk}", price: ${p.Harga} })' class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm">Tambah</button>
+                <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">${p.NamaProduk}</td>
+                <td class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]">${p.Harga}</td>
+                <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">${p.Stok}</td>
+                <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
+                    <button onclick='addToCart({ id: ${p.ID}, name: "${p.NamaProduk}", price: ${p.Harga} })' class="bg-[#4A90E2] text-white px-3 py-1 rounded-lg hover:bg-[#3A7AD0] transition duration-300 text-sm">Tambah</button>
                 </td>
             </tr>
           `;
@@ -142,13 +180,13 @@
         let total = 0;
         if (cart.length === 0) {
           cartItemsDiv.innerHTML =
-            '<p class="text-gray-500">Keranjang kosong.</p>';
+            '<p class="text-[#333333]">Keranjang kosong.</p>';
           checkoutBtn.disabled = true;
         } else {
           cart.forEach((item) => {
             total += item.price * item.quantity;
             cartItemsDiv.innerHTML += `
-                <div class="flex justify-between items-center mb-2">
+                <div class="flex justify-between items-center mb-2 text-[#333333]">
                     <div>
                         <p class="font-semibold">${item.name}</p>
                         <p class="text-sm text-gray-600">${item.quantity} x Rp ${item.price}</p>
