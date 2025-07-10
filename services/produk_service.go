@@ -14,6 +14,7 @@ type ProdukService interface {
 	Create(produk models.Produk) (models.Produk, error)
 	GetByID(id uint) (models.Produk, error)
 	Update(id uint, produk models.Produk) (models.Produk, error)
+	Delete(id uint) error
 }
 
 type produkServiceImpl struct {
@@ -55,4 +56,9 @@ func (s *produkServiceImpl) Update(id uint, produk models.Produk) (models.Produk
 	// Set ID dari URL ke struct produk sebelum di-save
 	produk.ID = id
 	return s.repo.Update(produk)
+}
+
+func (s *produkServiceImpl) Delete(id uint) error {
+	log.Printf("Service: Memulai proses delete produk ID: %d", id)
+	return s.repo.Delete(id)
 }

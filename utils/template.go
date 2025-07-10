@@ -6,24 +6,16 @@ import (
 )
 
 func ParseTemplates() *template.Template {
-	log.Println("Parsing templates...")
+	log.Println("Parsing semua templates...")
 
-	// tmplt, err := template.ParseGlob("../templates/*.html")
-	// if err != nil {
-	// 	log.Fatalf("Gagal mem-parsing template layout: %v", err)
-	// }
-
-	tmplt, err := template.ParseGlob("../templates/produk/*.html")
+	// Gunakan "../" untuk naik satu level dari direktori 'cmd/'
+	// Gunakan "**/" untuk mencari di semua sub-folder secara rekursif
+	tmpl, err := template.ParseGlob("templates/**/*.html")
 	if err != nil {
-		log.Fatalf("Gagal mem-parsing template produk: %v", err)
-	}
-
-	// TAMBAHKAN INI: Parsing folder partials
-	_, err = tmplt.ParseGlob("../templates/partials/*.html")
-	if err != nil {
-		log.Fatalf("Gagal mem-parsing template partials: %v", err)
+		// Jika ada error (misal: pola salah), program akan berhenti dengan pesan jelas
+		panic("Gagal mem-parsing templates: " + err.Error())
 	}
 
 	log.Println("Parsing templates selesai.")
-	return tmplt
+	return tmpl
 }

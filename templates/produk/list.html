@@ -17,6 +17,11 @@
             class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
             >Tambah Produk</a
           >
+          <a
+            href="/produk/export/excel"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >Ekspor ke Excel</a
+          >
         </div>
         <table class="min-w-full">
           <thead>
@@ -42,6 +47,24 @@
                   class="text-blue-500 hover:underline"
                   >Edit</a
                 >
+              </td>
+              <td class="py-2 px-4 border-b text-center">
+                <a
+                  href="/produk/edit/{{.ID}}"
+                  class="text-blue-500 hover:underline mr-2"
+                  >Edit</a
+                >
+
+                <form
+                  action="/produk/delete/{{.ID}}"
+                  method="post"
+                  class="inline"
+                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');"
+                >
+                  <button type="submit" class="text-red-500 hover:underline">
+                    Hapus
+                  </button>
+                </form>
               </td>
             </tr>
             {{end}}

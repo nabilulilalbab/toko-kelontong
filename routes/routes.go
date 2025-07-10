@@ -19,5 +19,7 @@ func SetupRouter(produkController controllers.ProdukController) *httprouter.Rout
 	router.POST("/produk/tambah", produkController.Store)
 	router.GET("/produk/edit/:id", produkController.Edit)
 	router.POST("/produk/update/:id", produkController.Update)
+	router.POST("/produk/delete/:id", produkController.Delete)
+	router.GET("/produk/export/excel", produkController.ExportExcel)
 	return router
 }
