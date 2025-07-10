@@ -9,7 +9,8 @@ import (
 
 // CreateTransaksiRequest adalah struct untuk menampung data input dari keranjang belanja
 type CreateTransaksiRequest struct {
-	Items []struct {
+	MetodePembayaran string `json:"metode_pembayaran"`
+	Items            []struct {
 		ProdukID uint `json:"produk_id"`
 		Jumlah   uint `json:"jumlah"`
 	} `json:"items"`
@@ -19,6 +20,7 @@ type TransaksiService interface {
 	Create(request CreateTransaksiRequest) (models.Transaksi, error)
 	GetAll() ([]models.Transaksi, error)
 	GetByID(id uint) (models.Transaksi, error)
+	UpdateStatus(id uint, status string) error
 }
 
 type transaksiServiceImpl struct {
@@ -61,6 +63,7 @@ func (s *transaksiServiceImpl) Create(request CreateTransaksiRequest) (models.Tr
 	// Siapkan data transaksi utama
 	transaksi := models.Transaksi{
 		TotalHarga:       totalHarga,
+		MetodePembayaran: request.MetodePembayaran,
 		DetailTransaksis: detailTransaksis,
 	}
 
@@ -82,4 +85,9 @@ func (s *transaksiServiceImpl) GetAll() ([]models.Transaksi, error) {
 func (s *transaksiServiceImpl) GetByID(id uint) (models.Transaksi, error) {
 	log.Printf("Service: Mencari transaksi dengan ID: %d", id)
 	return s.transaksiRepo.FindByID(id)
+}
+
+func (s *transaksiServiceImpl) UpdateStatus(id uint, status string) error {
+	log.Printf("Service: Mengubah status transaksi ID %d menjadi %s", id, status)
+	return s.transaksiRepo.UpdateStatus(id, status)
 }

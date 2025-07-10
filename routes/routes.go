@@ -26,5 +26,8 @@ func SetupRouter(produkController controllers.ProdukController, transaksiControl
 	router.GET("/histori", transaksiController.ShowHistoryPage)
 	router.GET("/histori/:id", transaksiController.ShowHistoryDetailPage)
 	router.GET("/api/produk/search", produkController.SearchAPI)
+	router.POST("/api/generate-qris", transaksiController.GenerateQRIS)
+	router.GET("/pembayaran/:id", transaksiController.ShowPaymentPage)
+	router.POST("/pembayaran/konfirmasi/:id", transaksiController.ConfirmPayment)
 	return router
 }

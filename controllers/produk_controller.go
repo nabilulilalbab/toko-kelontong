@@ -75,19 +75,43 @@ func (c *produkControllerImpl) Store(w http.ResponseWriter, r *http.Request, ps 
 		http.Error(w, "Gagal mem-parsing form", http.StatusBadRequest)
 		return
 	}
+
 	namaProduk := r.PostForm.Get("nama_produk")
+	hargaStr := r.PostForm.Get("harga")
+	stokStr := r.PostForm.Get("stok")
+
+	// --- MULAI BLOK VALIDASI ---
+	if namaProduk == "" || hargaStr == "" || stokStr == "" {
+		data := map[string]interface{}{
+			"Title":      "Tambah Produk Baru",
+			"FormAction": "/produk/tambah",
+			"Error":      "Semua kolom wajib diisi.",
+			// Kirim kembali data yang sudah diinput agar tidak hilang
+			"Product": models.Produk{
+				NamaProduk: namaProduk,
+				Harga:      uint(mustAtoi(hargaStr)),
+				Stok:       uint(mustAtoi(stokStr)),
+			},
+		}
+		c.templates.ExecuteTemplate(w, "form.html", data)
+		return
+	}
+	// --- SELESAI BLOK VALIDASI ---
+
+	harga, _ := strconv.Atoi(hargaStr)
+	stok, _ := strconv.Atoi(stokStr)
 
 	produk := models.Produk{
 		NamaProduk: namaProduk,
-		Harga:      uint(mustAtoi(r.PostForm.Get("harga"))),
-		Stok:       uint(mustAtoi(r.PostForm.Get("stok"))),
+		Harga:      uint(harga),
+		Stok:       uint(stok),
 	}
 	_, err := c.produkService.Create(produk)
 	if err != nil {
 		http.Error(w, "Gagal menyimpan produk", http.StatusInternalServerError)
 		return
 	}
-	log.Println("Controller: Berhasil store produk, redirecting...")
+
 	http.Redirect(w, r, "/produk", http.StatusSeeOther)
 }
 
@@ -106,14 +130,41 @@ func (c *produkControllerImpl) Edit(w http.ResponseWriter, r *http.Request, ps h
 	c.templates.ExecuteTemplate(w, "form.html", data)
 }
 
+// controllers/produk_controller.go
+
 func (c *produkControllerImpl) Update(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-	id := mustAtoi(ps.ByName("id"))
-	r.ParseForm()
+	id, _ := strconv.Atoi(ps.ByName("id"))
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, "Gagal mem-parsing form", http.StatusBadRequest)
+		return
+	}
+
+	namaProduk := r.PostForm.Get("nama_produk")
+	hargaStr := r.PostForm.Get("harga")
+	stokStr := r.PostForm.Get("stok")
+
+	// --- MULAI BLOK VALIDASI ---
+	if namaProduk == "" || hargaStr == "" || stokStr == "" {
+		data := map[string]interface{}{
+			"Title":      "Edit Produk",
+			"FormAction": "/produk/update/" + strconv.Itoa(id),
+			"Error":      "Semua kolom wajib diisi.",
+			"Product": models.Produk{
+				ID:         uint(id),
+				NamaProduk: namaProduk,
+				Harga:      uint(mustAtoi(hargaStr)),
+				Stok:       uint(mustAtoi(stokStr)),
+			},
+		}
+		c.templates.ExecuteTemplate(w, "form.html", data)
+		return
+	}
+	// --- SELESAI BLOK VALIDASI ---
 
 	produk := models.Produk{
-		NamaProduk: r.PostForm.Get("nama_produk"),
-		Harga:      uint(mustAtoi(r.PostForm.Get("harga"))),
-		Stok:       uint(mustAtoi(r.PostForm.Get("stok"))),
+		NamaProduk: namaProduk,
+		Harga:      uint(mustAtoi(hargaStr)),
+		Stok:       uint(mustAtoi(stokStr)),
 	}
 
 	c.produkService.Update(uint(id), produk)

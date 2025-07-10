@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kasir - Toko Klontong</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    {{template "navbar.html"}}
+    <main class="container mx-auto p-8 flex justify-center items-center">
+      <div
+        class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg text-center"
+      >
+        <h1 class="text-2xl font-bold mb-2">Selesaikan Pembayaran</h1>
+        <p class="text-gray-600 mb-6">
+          Pindai QR Code di bawah ini untuk membayar.
+        </p>
+
+        <div class="flex justify-center mb-6 bg-white p-4 rounded-lg">
+          <img
+            src="data:image/png;base64,{{.QRCode}}"
+            alt="QRIS Code"
+            class="w-64 h-64"
+          />
+        </div>
+
+        <div class="text-left mb-8 bg-gray-100 p-6 rounded-lg">
+          <div class="flex justify-between items-center text-xl font-bold">
+            <span>Total Pembayaran:</span>
+            <span class="text-blue-600">Rp {{.Transaction.TotalHarga}}</span>
+          </div>
+        </div>
+
+        <form action="/pembayaran/konfirmasi/{{.Transaction.ID}}" method="post">
+          <button
+            type="submit"
+            class="w-full bg-green-500 text-white font-bold py-3 rounded-lg hover:bg-green-600"
+          >
+            Saya Sudah Bayar
+          </button>
+        </form>
+      </div>
+    </main>
+    {{template "footer.html"}}
+  </body>
+</html>

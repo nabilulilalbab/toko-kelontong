@@ -12,6 +12,7 @@ type TransaksiRepository interface {
 	Create(transaksi models.Transaksi) (models.Transaksi, error)
 	FindAll() ([]models.Transaksi, error)
 	FindByID(id uint) (models.Transaksi, error)
+	UpdateStatus(id uint, status string) error
 }
 
 type transaksiRepositoryImpl struct {
@@ -77,4 +78,9 @@ func (r *transaksiRepositoryImpl) FindByID(id uint) (models.Transaksi, error) {
 	// GORM Preload untuk otomatis mengambil data relasi (DetailTransaksis dan Produk-nya)
 	err := r.db.Preload("DetailTransaksis.Produk").First(&transaksi, id).Error
 	return transaksi, err
+}
+
+func (r *transaksiRepositoryImpl) UpdateStatus(id uint, status string) error {
+	// Menggunakan Model().Where().Update() untuk efisiensi
+	return r.db.Model(&models.Transaksi{}).Where("id = ?", id).Update("status", status).Error
 }

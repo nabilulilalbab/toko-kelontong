@@ -3,22 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>Kasir - Toko Klontong</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 font-sans">
     {{template "navbar.html"}}
     <div class="container mx-auto mt-8 grid grid-cols-3 gap-8">
+      <!-- Kolom Daftar Produk -->
       <div class="col-span-2 bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold mb-4">Daftar Produk</h2>
-
         <input
           type="text"
           id="search-box"
           placeholder="Cari nama produk..."
           class="w-full px-3 py-2 border rounded mb-4"
         />
-
         <div class="max-h-[65vh] overflow-y-auto">
           <table class="min-w-full">
             <thead class="bg-gray-200 sticky top-0">
@@ -50,10 +49,31 @@
         </div>
       </div>
 
+      <!-- Kolom Keranjang & Pembayaran -->
       <div class="col-span-1 bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-2xl font-bold mb-4">Keranjang</h2>
-        <div id="cart-items" class="mb-4 min-h-[50vh]"></div>
+        <div id="cart-items" class="mb-4 min-h-[45vh]">
+          <p class="text-gray-500">Keranjang kosong.</p>
+        </div>
         <div class="border-t pt-4">
+          <div class="mb-4">
+            <h3 class="font-bold mb-2">Metode Bayar:</h3>
+            <div class="flex items-center space-x-4">
+              <label
+                ><input
+                  type="radio"
+                  name="payment_method"
+                  value="tunai"
+                  checked
+                />
+                Tunai</label
+              >
+              <label
+                ><input type="radio" name="payment_method" value="qris" />
+                QRIS</label
+              >
+            </div>
+          </div>
           <div class="flex justify-between items-center text-xl font-bold">
             <span>Total:</span>
             <span id="cart-total">Rp 0</span>
@@ -63,23 +83,22 @@
             class="w-full bg-green-500 text-white mt-4 py-3 rounded hover:bg-green-600 disabled:bg-gray-400"
             disabled
           >
-            Selesaikan Transaksi
+            Proses Pembayaran
           </button>
         </div>
       </div>
     </div>
-    {{template "footer.html" .}}
+
+    {{template "footer.html"}}
 
     <script>
       let cart = [];
       const searchBox = document.getElementById("search-box");
       const productTableBody = document.getElementById("product-table-body");
 
-      // Fungsi untuk me-render ulang isi tabel produk
       function renderProductTable(products) {
-        productTableBody.innerHTML = ""; // Kosongkan tabel
-        if (!products) return; // Jaga-jaga jika products null
-
+        productTableBody.innerHTML = "";
+        if (!products) return;
         products.forEach((p) => {
           productTableBody.innerHTML += `
             <tr>
@@ -94,7 +113,6 @@
         });
       }
 
-      // Event listener untuk setiap kali user mengetik di search box
       searchBox.addEventListener("keyup", async () => {
         const query = searchBox.value;
         try {
@@ -106,7 +124,6 @@
         }
       });
 
-      // ---- Logika Keranjang Belanja ----
       function addToCart(product) {
         const existingItem = cart.find((item) => item.id === product.id);
         if (existingItem) {
@@ -123,7 +140,6 @@
         const checkoutBtn = document.getElementById("checkout-btn");
         cartItemsDiv.innerHTML = "";
         let total = 0;
-
         if (cart.length === 0) {
           cartItemsDiv.innerHTML =
             '<p class="text-gray-500">Keranjang kosong.</p>';
@@ -146,10 +162,16 @@
         cartTotalSpan.textContent = `Rp ${total}`;
       }
 
+      // === LOGIKA BARU UNTUK CHECKOUT ===
       document
         .getElementById("checkout-btn")
         .addEventListener("click", async () => {
+          const paymentMethod = document.querySelector(
+            'input[name="payment_method"]:checked',
+          ).value;
+
           const payload = {
+            metode_pembayaran: paymentMethod,
             items: cart.map((item) => ({
               produk_id: item.id,
               jumlah: item.quantity,
@@ -166,19 +188,27 @@
             const result = await response.json();
 
             if (!response.ok) {
-              throw new Error(result.message || "Terjadi kesalahan");
+              throw new Error(
+                result.message || "Terjadi kesalahan saat checkout",
+              );
             }
 
-            alert(`Transaksi berhasil! ID: ${result.transaksi_id}`);
-            cart = [];
-            renderCart();
-            window.location.reload();
+            // Cek respons dari server
+            if (result.redirect_url) {
+              // Jika ada redirect_url (untuk QRIS), arahkan ke halaman pembayaran
+              window.location.href = result.redirect_url;
+            } else {
+              // Jika tidak ada (untuk Tunai), tampilkan pesan sukses dan reload
+              alert(`Transaksi tunai berhasil! ID: ${result.transaksi_id}`);
+              cart = [];
+              renderCart();
+              window.location.reload();
+            }
           } catch (error) {
             alert(`Error: ${error.message}`);
           }
         });
 
-      // Render keranjang saat halaman pertama kali dimuat
       renderCart();
     </script>
   </body>
