@@ -42,7 +42,7 @@
                     <td class="text-center">{{.Stok}}</td>
                     <td class="text-center">
                       <button
-                        onclick='addToCart({ id: {{.ID}}, name: "{{.NamaProduk}}", price: {{.Harga}} })'
+                        onclick='addToCartById({{ .ID }})'
                         class="btn btn-primary btn-sm btn-outline hover:btn-active transition-all duration-200"
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -135,7 +135,7 @@
                 <td class="text-right">Rp ${p.Harga}</td>
                 <td class="text-center">${p.Stok}</td>
                 <td class="text-center">
-                    <button onclick='addToCart({ id: ${p.ID}, name: "${p.NamaProduk}", price: ${p.Harga} })' class="btn btn-primary btn-sm">Tambah</button>
+                    <button onclick='addToCartById(${p.id})' class="btn btn-primary btn-sm">Tambah</button>
                 </td>
             </tr>
           `;
@@ -147,6 +147,15 @@
         const filteredProducts = allProducts.filter(p => p.NamaProduk.toLowerCase().includes(query));
         renderProductTable(filteredProducts);
       });
+
+      function addToCartById(productId) {
+        const product = allProducts.find(p => p.id === productId);
+        if (product) {
+          addToCart({ id: product.id, name: product.NamaProduk, price: product.Harga });
+        } else {
+          console.error("Product not found!");
+        }
+      }
 
       function addToCart(product) {
         const existingItem = cart.find((item) => item.id === product.id);
