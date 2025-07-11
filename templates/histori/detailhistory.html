@@ -1,47 +1,70 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/output.css" />
+
     <title>Detail Transaksi - Toko Klontong</title>
   </head>
-  <body class="bg-[#F8F8F8] font-sans">
+  <body class="min-h-screen bg-base-200 flex flex-col">
     {{template "navbar.html"}}
 
-    <div class="container mx-auto mt-8">
-      <h1 class="text-3xl font-bold mb-4 text-[#333333]">
-        Detail Transaksi #{{.Transaction.ID}}
-      </h1>
-      <div class="bg-[#F8F8F8] shadow-lg rounded-xl p-6">
-        {{$formatWaktu := "02 Jan 2006 15:04:05"}}
-        <p class="mb-2 text-[#333333]">
-          <strong>Waktu:</strong> {{.Transaction.CreatedAt.Format $formatWaktu}}
-        </p>
-        <p class="mb-4 text-[#333333]">
-          <strong>Total:</strong>
-          <span class="font-bold text-lg">Rp {{.Transaction.TotalHarga}}</span>
-        </p>
-        <h3 class="text-xl font-semibold mt-6 mb-2 border-t border-[#E0E0E0] pt-4 text-[#333333]">
-          Item yang Dibeli:
-        </h3>
-        <ul>
-          {{range .Transaction.DetailTransaksis}}
-          <li class="flex justify-between border-b border-[#E0E0E0] py-2 text-[#333333]">
-            <span
-              >{{.Produk.NamaProduk}} ({{.Jumlah}} x Rp {{.Produk.Harga}})</span
-            >
-            <span>Rp {{.Subtotal}}</span>
-          </li>
-          {{end}}
-        </ul>
-        <a
-          href="/histori"
-          class="text-[#4A90E2] hover:text-[#3A7AD0] mt-6 inline-block transition duration-300"
-          >&larr; Kembali ke Riwayat</a
-        >
+    <main class="container mx-auto mt-8 p-4 flex-grow">
+      <div class="card w-full max-w-2xl bg-base-100 shadow-xl mx-auto">
+        <div class="card-body">
+          <h1 class="card-title text-3xl">
+            Detail Transaksi #{{.Transaction.ID}}
+          </h1>
+          <div class="divider"></div>
+          <div class="space-y-2 mb-4 text-base-content/80">
+            {{$formatWaktu := "02 Jan 2006 15:04:05"}}
+            <p>
+              <strong>Waktu:</strong> {{.Transaction.CreatedAt.Format
+              $formatWaktu}}
+            </p>
+            <p class="text-xl">
+              <strong>Total:</strong>
+              <span class="font-bold text-primary"
+                >Rp {{.Transaction.TotalHarga}}</span
+              >
+            </p>
+          </div>
+
+          <h3 class="text-xl font-semibold mt-6 mb-2">Item yang Dibeli:</h3>
+          <div class="overflow-x-auto">
+            <table class="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th>Produk</th>
+                  <th class="text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .Transaction.DetailTransaksis}}
+                <tr>
+                  <td>
+                    <div class="font-bold">{{.Produk.NamaProduk}}</div>
+                    <div class="text-sm opacity-70">
+                      {{.Jumlah}} x Rp {{.Produk.Harga}}
+                    </div>
+                  </td>
+                  <td class="text-right">Rp {{.Subtotal}}</td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="card-actions justify-start mt-6">
+            <a href="/histori" class="btn btn-ghost">
+              &larr; Kembali ke Riwayat
+            </a>
+          </div>
+        </div>
       </div>
-    </div>
+    </main>
+
     {{template "footer.html" .}}
   </body>
 </html>

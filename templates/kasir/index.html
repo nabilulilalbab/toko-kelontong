@@ -1,165 +1,151 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kasir - Toko Klontong</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@5"
-      rel="stylesheet"
-      type="text/css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css"
-      rel="stylesheet"
-      type="text/css"
-    />
-  </head>
-  <body class="bg-[#F8F8F8] font-sans">
-    {{template "navbar.html"}}
-    <div class="container mx-auto mt-8 grid grid-cols-3 gap-8">
-      <!-- Kolom Daftar Produk -->
-      <div class="col-span-2 bg-[#F8F8F8] p-6 rounded-xl shadow-lg">
-        <h2 class="text-2xl font-bold mb-4 text-[#333333]">Daftar Produk</h2>
-        <input
-          type="text"
-          id="search-box"
-          placeholder="Cari nama produk..."
-          class="w-full px-3 py-2 border border-[#E0E0E0] rounded-lg mb-4 focus:outline-none focus:border-[#4A90E2]"
-        />
-        <div class="max-h-[65vh] overflow-y-auto">
-          <table class="min-w-full">
-            <thead class="bg-[#E0E0E0] sticky top-0">
-              <tr>
-                <th
-                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tl-lg"
-                >
-                  Nama Produk
-                </th>
-                <th
-                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm"
-                >
-                  Harga
-                </th>
-                <th
-                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm"
-                >
-                  Stok
-                </th>
-                <th
-                  class="py-3 px-4 border-b border-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tr-lg"
-                >
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody id="product-table-body">
-              {{range .Products}}
-              <tr>
-                <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">
-                  {{.NamaProduk}}
-                </td>
-                <td
-                  class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]"
-                >
-                  {{.Harga}}
-                </td>
-                <td
-                  class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]"
-                >
-                  {{.Stok}}
-                </td>
-                <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
-                  <button
-                    onclick='addToCart({ id: {{.ID}}, name: "{{.NamaProduk}}", price: {{.Harga}} })'
-                    class="bg-[#4A90E2] text-white px-3 py-1 rounded-lg hover:bg-[#3A7AD0] transition duration-300 text-sm"
-                  >
-                    Tambah
-                  </button>
-                </td>
-              </tr>
-              {{end}}
-            </tbody>
-          </table>
-        </div>
-      </div>
 
-      <!-- Kolom Keranjang & Pembayaran -->
-      <div class="col-span-1 bg-[#F8F8F8] p-6 rounded-xl shadow-lg">
-        <h2 class="text-2xl font-bold mb-4 text-[#333333]">Keranjang</h2>
-        <div id="cart-items" class="mb-4 min-h-[45vh]">
-          <p class="text-[#333333]">Keranjang kosong.</p>
-        </div>
-        <div class="border-t border-[#E0E0E0] pt-4">
-          <div class="mb-4">
-            <h3 class="font-bold mb-2 text-[#333333]">Metode Bayar:</h3>
-            <div class="flex items-center space-x-4">
-              <label class="text-[#333333]"
-                ><input
-                  type="radio"
-                  name="payment_method"
-                  value="tunai"
-                  checked
-                />
-                Tunai</label
-              >
-              <label class="text-[#333333]"
-                ><input type="radio" name="payment_method" value="qris" />
-                QRIS</label
-              >
+    <link rel="stylesheet" href="/static/css/output.css" />
+  </head>
+  <body class="min-h-screen bg-base-200 flex flex-col">
+    {{template "navbar.html"}}
+
+    <main class="container mx-auto p-2 sm:p-4 flex-grow animate-fade-in">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
+        <!-- Kolom Daftar Produk -->
+        <div class="lg:col-span-2 card bg-base-100 shadow-xl animate-slide-in-left">
+          <div class="card-body p-4 md:p-8">
+            <h2 class="card-title text-2xl font-bold text-primary mb-4">Daftar Produk</h2>
+            <div class="form-control mb-4">
+              <input
+                type="text"
+                id="search-box"
+                placeholder="Cari nama produk..."
+                class="input input-bordered input-primary w-full focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+              />
+            </div>
+            <div class="overflow-x-auto max-h-[50vh] lg:max-h-[60vh] custom-scrollbar">
+              <table class="table table-zebra table-pin-rows table-sm sm:table-md">
+                <thead>
+                  <tr>
+                    <th>Nama Produk</th>
+                    <th class="text-right">Harga</th>
+                    <th class="text-center">Stok</th>
+                    <th class="text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="product-table-body">
+                  {{range .Products}}
+                  <tr class="hover:bg-base-200 transition-colors duration-150">
+                    <td>{{.NamaProduk}}</td>
+                    <td class="text-right">Rp {{.Harga}}</td>
+                    <td class="text-center">{{.Stok}}</td>
+                    <td class="text-center">
+                      <button
+                        onclick='addToCart({ id: {{.ID}}, name: "{{.NamaProduk}}", price: {{.Harga}} })'
+                        class="btn btn-primary btn-sm btn-outline hover:btn-active transition-all duration-200"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        Tambah
+                      </button>
+                    </td>
+                  </tr>
+                  {{end}}
+                </tbody>
+              </table>
             </div>
           </div>
-          <div
-            class="flex justify-between items-center text-xl font-bold text-[#333333]"
-          >
-            <span>Total:</span>
-            <span id="cart-total">Rp 0</span>
+        </div>
+
+        <!-- Kolom Keranjang & Pembayaran -->
+        <div class="lg:col-span-1 card bg-base-100 shadow-xl animate-slide-in-right">
+          <div class="card-body p-4 md:p-8">
+            <h2 class="card-title text-2xl font-bold text-primary mb-4">Keranjang</h2>
+            <div id="cart-items" class="mb-4 min-h-[25vh] space-y-2 overflow-y-auto custom-scrollbar">
+              <p class="text-base-content/60">Keranjang kosong.</p>
+            </div>
+            <div class="card-actions flex-col w-full">
+              <div class="form-control w-full mb-4">
+                <label class="label">
+                  <span class="label-text font-bold text-lg">Metode Bayar:</span>
+                </label>
+                <div class="flex flex-wrap gap-4">
+                  <label class="label cursor-pointer flex-grow">
+                    <input
+                      type="radio"
+                      name="payment_method"
+                      class="radio radio-primary"
+                      value="tunai"
+                      checked
+                    />
+                    <span class="label-text ml-2 text-base">Tunai</span>
+                  </label>
+                  <label class="label cursor-pointer flex-grow">
+                    <input
+                      type="radio"
+                      name="payment_method"
+                      class="radio radio-primary"
+                      value="qris"
+                    />
+                    <span class="label-text ml-2 text-base">QRIS</span>
+                  </label>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="flex justify-between items-center w-full text-xl sm:text-2xl font-extrabold text-accent mt-4">
+                <span>Total:</span>
+                <span id="cart-total">Rp 0</span>
+              </div>
+              <button
+                id="checkout-btn"
+                class="btn btn-primary btn-lg w-full mt-6 transform hover:scale-105 transition-transform duration-300 ease-in-out animate-bounce-once"
+                disabled
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                Proses Pembayaran
+              </button>
+            </div>
           </div>
-          <button
-            id="checkout-btn"
-            class="w-full bg-[#4A90E2] text-white mt-4 py-3 rounded-lg hover:bg-[#3A7AD0] transition duration-300 disabled:bg-gray-300 disabled:text-gray-500"
-            disabled
-          >
-            Proses Pembayaran
-          </button>
         </div>
       </div>
-    </div>
+    </main>
 
-    {{template "footer.html"}}
+    {{template "footer.html" .}}
 
     <script>
       let cart = [];
       const searchBox = document.getElementById("search-box");
       const productTableBody = document.getElementById("product-table-body");
+      const allProducts = [{{range .Products}}{ id: {{.ID}}, NamaProduk: "{{.NamaProduk}}", Harga: {{.Harga}}, Stok: {{.Stok}} },{{end}}];
 
       function renderProductTable(products) {
         productTableBody.innerHTML = "";
-        if (!products) return;
+        if (!products || products.length === 0) {
+            productTableBody.innerHTML = '<tr><td colspan="4" class="text-center p-4">Produk tidak ditemukan.</td></tr>';
+            return;
+        }
         products.forEach((p) => {
           productTableBody.innerHTML += `
             <tr>
-                <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">${p.NamaProduk}</td>
-                <td class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]">${p.Harga}</td>
-                <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">${p.Stok}</td>
-                <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
-                    <button onclick='addToCart({ id: ${p.ID}, name: "${p.NamaProduk}", price: ${p.Harga} })' class="bg-[#4A90E2] text-white px-3 py-1 rounded-lg hover:bg-[#3A7AD0] transition duration-300 text-sm">Tambah</button>
+                <td>${p.NamaProduk}</td>
+                <td class="text-right">Rp ${p.Harga}</td>
+                <td class="text-center">${p.Stok}</td>
+                <td class="text-center">
+                    <button onclick='addToCart({ id: ${p.ID}, name: "${p.NamaProduk}", price: ${p.Harga} })' class="btn btn-primary btn-sm">Tambah</button>
                 </td>
             </tr>
           `;
         });
       }
 
-      searchBox.addEventListener("keyup", async () => {
-        const query = searchBox.value;
-        try {
-          const response = await fetch(`/api/produk/search?q=${query}`);
-          const products = await response.json();
-          renderProductTable(products);
-        } catch (error) {
-          console.error("Gagal mencari produk:", error);
-        }
+      searchBox.addEventListener("keyup", () => {
+        const query = searchBox.value.toLowerCase();
+        const filteredProducts = allProducts.filter(p => p.NamaProduk.toLowerCase().includes(query));
+        renderProductTable(filteredProducts);
       });
 
       function addToCart(product) {
@@ -178,21 +164,27 @@
         const checkoutBtn = document.getElementById("checkout-btn");
         cartItemsDiv.innerHTML = "";
         let total = 0;
+
         if (cart.length === 0) {
           cartItemsDiv.innerHTML =
-            '<p class="text-[#333333]">Keranjang kosong.</p>';
+            '<p class="text-base-content/60">Keranjang kosong.</p>';
           checkoutBtn.disabled = true;
         } else {
-          cart.forEach((item) => {
+          cart.forEach((item, index) => {
             total += item.price * item.quantity;
             cartItemsDiv.innerHTML += `
-                <div class="flex justify-between items-center mb-2 text-[#333333]">
-                    <div>
-                        <p class="font-semibold">${item.name}</p>
-                        <p class="text-sm text-gray-600">${item.quantity} x Rp ${item.price}</p>
-                    </div>
-                    <p class="font-semibold">Rp ${item.quantity * item.price}</p>
-                </div>
+              <div class="flex justify-between items-center p-2 rounded-lg hover:bg-base-200">
+                  <div>
+                      <p class="font-semibold">${item.name}</p>
+                      <div class="flex items-center gap-2">
+                        <p class="text-sm text-base-content/70">${item.quantity} x Rp ${item.price}</p>
+                      </div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                     <p class="font-semibold">Rp ${item.quantity * item.price}</p>
+                     <button onclick="removeFromCart(${index})" class="btn btn-ghost btn-xs">x</button>
+                  </div>
+              </div>
             `;
           });
           checkoutBtn.disabled = false;
@@ -200,7 +192,11 @@
         cartTotalSpan.textContent = `Rp ${total}`;
       }
 
-      // === LOGIKA BARU UNTUK CHECKOUT ===
+      function removeFromCart(index) {
+        cart.splice(index, 1);
+        renderCart();
+      }
+
       document
         .getElementById("checkout-btn")
         .addEventListener("click", async () => {
@@ -231,22 +227,23 @@
               );
             }
 
-            // Cek respons dari server
             if (result.redirect_url) {
-              // Jika ada redirect_url (untuk QRIS), arahkan ke halaman pembayaran
               window.location.href = result.redirect_url;
             } else {
-              // Jika tidak ada (untuk Tunai), tampilkan pesan sukses dan reload
-              alert(`Transaksi tunai berhasil! ID: ${result.transaksi_id}`);
+              // For now, just log success and clear cart
+              console.log(`Transaksi tunai berhasil! ID: ${result.transaksi_id}`);
               cart = [];
               renderCart();
+              // Optionally, show a success modal/toast here instead of reloading
               window.location.reload();
             }
           } catch (error) {
-            alert(`Error: ${error.message}`);
+            console.error(`Error: ${error.message}`);
+            // Optionally, show an error modal/toast to the user
           }
         });
 
+      // Initial render
       renderCart();
     </script>
   </body>

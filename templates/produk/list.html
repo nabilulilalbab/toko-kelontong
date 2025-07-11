@@ -1,75 +1,95 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/output.css" />
+
     <title>{{ .Title }} - Toko Klontong</title>
   </head>
-  <body class="bg-[#F8F8F8]">
+  <body class="min-h-screen bg-base-200 flex flex-col">
     {{template "navbar.html"}}
-    <div class="container mx-auto mt-8">
-      <h1 class="text-3xl font-bold mb-4 text-[#333333]">Daftar Produk</h1>
-      <div class="bg-[#F8F8F8] shadow-lg rounded-xl p-6">
-        <div class="mb-4 flex space-x-2">
-          <a
-            href="/produk/tambah"
-            class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300"
-            >Tambah Produk</a
+    <main class="container mx-auto p-2 sm:p-4 flex-grow animate-fade-in">
+      <div class="card w-full bg-base-100 shadow-xl">
+        <div class="card-body p-4 md:p-8">
+          <div
+            class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4"
           >
-          <a
-            href="/produk/export?format=excel"
-            class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300"
-            >Ekspor ke Excel</a
-          >
-          <a
-            href="/produk/export?format=pdf"
-            class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300"
-            >Ekspor ke PDF</a
-          >
+            <h1 class="card-title text-2xl sm:text-3xl font-bold text-primary">Daftar Produk</h1>
+            <div class="flex space-x-2">
+              <a href="/produk/tambah" class="btn btn-primary btn-sm sm:btn-md animate-bounce-once"
+                >Tambah Produk</a
+              >
+              <div class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-secondary btn-sm sm:btn-md"
+                  >Export
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                  </svg>
+                </label>
+                <ul
+                  tabindex="0"
+                  class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10"
+                >
+                  <li>
+                    <a href="/produk/export?format=excel" class="hover:bg-base-200">Export ke Excel</a>
+                  </li>
+                  <li><a href="/produk/export?format=pdf" class="hover:bg-base-200">Export ke PDF</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="table table-zebra w-full table-sm sm:table-md">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nama Produk</th>
+                  <th class="text-right">Harga</th>
+                  <th class="text-center">Stok</th>
+                  <th class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .Products}}
+                <tr class="hover:bg-base-200 transition-colors duration-150">
+                  <th class="font-mono">{{.ID}}</th>
+                  <td>{{.NamaProduk}}</td>
+                  <td class="text-right">Rp {{.Harga}}</td>
+                  <td class="text-center">{{.Stok}}</td>
+                  <td class="text-center space-x-1">
+                    <a
+                      href="/produk/edit/{{.ID}}"
+                      class="btn btn-ghost btn-xs sm:btn-sm btn-outline hover:btn-active transition-all duration-200"
+                      >Edit</a
+                    >
+                    <form
+                      action="/produk/delete/{{.ID}}"
+                      method="post"
+                      class="inline"
+                      onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');"
+                    >
+                      <button
+                        type="submit"
+                        class="btn btn-error btn-xs sm:btn-sm btn-outline hover:btn-active transition-all duration-200"
+                      >
+                        Hapus
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                {{else}}
+                <tr>
+                  <td colspan="5" class="text-center p-4 text-base-content/60">Belum ada produk.</td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <table class="min-w-full">
-          <thead>
-            <tr>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tl-lg">ID</th>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Nama Produk</th>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Harga</th>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Stok</th>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tr-lg">Aksi</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {{range .Products}}
-            <tr>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">{{.ID}}</td>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">{{.NamaProduk}}</td>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]">{{.Harga}}</td>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">{{.Stok}}</td>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
-                <a
-                  href="/produk/edit/{{.ID}}"
-                  class="text-[#4A90E2] hover:text-[#3A7AD0] mr-2 transition duration-300"
-                  >Edit</a
-                >
-
-                <form
-                  action="/produk/delete/{{.ID}}"
-                  method="post"
-                  class="inline"
-                  onsubmit="return confirm('Apakah Anda yakin ingin menghapus produk ini?');"
-                >
-                  <button type="submit" class="text-[#4A90E2] hover:text-[#3A7AD0] transition duration-300">
-                    Hapus
-                  </button>
-                </form>
-              </td>
-            </tr>
-            {{end}}
-          </tbody>
-        </table>
       </div>
-    </div>
+    </main>
     {{template "footer.html" .}}
   </body>
 </html>

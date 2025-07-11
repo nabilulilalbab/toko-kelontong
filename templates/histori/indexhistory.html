@@ -1,49 +1,57 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/output.css" />
     <title>Riwayat Transaksi - Toko Klontong</title>
   </head>
-  <body class="bg-[#F8F8F8] font-sans">
+  <body class="min-h-screen bg-base-200 flex flex-col">
     {{template "navbar.html"}}
-    <div class="container mx-auto mt-8">
-      <h1 class="text-3xl font-bold mb-4 text-[#333333]">Riwayat Transaksi</h1>
-      <div class="mb-4">
-        <a href="/reports/histori" class="bg-[#4A90E2] text-white px-4 py-2 rounded-lg hover:bg-[#3A7AD0] transition duration-300">
-          Export PDF
-        </a>
+    <main class="container mx-auto mt-8 p-4 flex-grow">
+      <div class="card w-full bg-base-100 shadow-xl">
+        <div class="card-body">
+          <div class="flex justify-between items-center mb-4">
+            <h1 class="card-title text-3xl">Riwayat Transaksi</h1>
+            <a href="/reports/histori" class="btn btn-secondary">
+              Export PDF
+            </a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th class="text-center">ID Transaksi</th>
+                  <th>Waktu</th>
+                  <th class="text-right">Total Harga</th>
+                  <th class="text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {{range .Transactions}}
+                <tr>
+                  <td class="text-center font-mono">#{{.ID}}</td>
+                  <td>{{.CreatedAt.Format "02 Jan 2006 15:04"}}</td>
+                  <td class="text-right font-semibold">Rp {{.TotalHarga}}</td>
+                  <td class="text-center">
+                    <a href="/histori/{{.ID}}" class="btn btn-ghost btn-sm">
+                      Detail
+                    </a>
+                  </td>
+                </tr>
+                {{else}}
+                <tr>
+                  <td colspan="4" class="text-center p-4">
+                    Belum ada riwayat transaksi.
+                  </td>
+                </tr>
+                {{end}}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="bg-[#F8F8F8] shadow-lg rounded-xl p-6">
-        <table class="min-w-full">
-          <thead>
-            <tr>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tl-lg">ID Transaksi</th>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Waktu</th>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm">Total Harga</th>
-              <th class="py-3 px-4 border-b border-[#E0E0E0] bg-[#E0E0E0] text-[#333333] uppercase font-semibold text-sm rounded-tr-lg">Aksi</th>
-            </tr>
-          </thead>
-          <tbody>
-            {{range .Transactions}}
-            <tr>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center text-[#333333]">{{.ID}}</td>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-[#333333]">
-                {{.CreatedAt.Format "02 Jan 2006 15:04"}}
-              </td>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-right text-[#333333]">Rp {{.TotalHarga}}</td>
-              <td class="py-2 px-4 border-b border-[#E0E0E0] text-center">
-                <a href="/histori/{{.ID}}" class="text-[#4A90E2] hover:text-[#3A7AD0] transition duration-300"
-                  >Detail</a
-                >
-              </td>
-            </tr>
-            {{end}}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    </main>
     {{template "footer.html" .}}
   </body>
 </html>

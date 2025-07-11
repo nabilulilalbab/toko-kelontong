@@ -11,6 +11,9 @@ import (
 
 func SetupRouter(produkController controllers.ProdukController, transaksiController controllers.TransaksiController) *httprouter.Router {
 	router := httprouter.New()
+	// Serve static files
+	router.ServeFiles("/static/*filepath", http.Dir("static"))
+
 	router.GET("/", func(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		fmt.Fprint(w, "Selamat Datang di Toko Klontong!")
 	})
